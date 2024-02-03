@@ -17,43 +17,21 @@ class SettingsViewModel: ViewModel() {
     var expanded by mutableStateOf(false)
     var sliderValue by mutableFloatStateOf(0f)
     var finishValue by mutableStateOf("")
-    var round by mutableIntStateOf(0)
+
+
+
+    var rondaActual by mutableIntStateOf(0)
+    var rondasTotales by mutableIntStateOf(5)
+    var round by mutableIntStateOf(1)
+    fun cambiarDeRonda(nuevaRonda: Int) {
+        rondasTotales = nuevaRonda
+    }
 
 
     var difficulty: String by mutableStateOf("Easy")
-
-
-
-    var rondas by mutableIntStateOf(0)
-    fun numRondas(numero: Int) {
-        rondas = numero
-    }
-
-    var tiempo by mutableIntStateOf(0)
-    fun actualizarTiempo(reset: Int) {
-        tiempo = reset
-    }
-
-
-    var modoOscuro by mutableStateOf(false)
-    fun botonModoOscuro(encendido: Boolean) {
-        modoOscuro = encendido
-    }
-
-
-    var totalDeRondas by mutableIntStateOf(0)
-    fun cambiarDeRonda(nuevaRonda: Int) {
-        totalDeRondas = nuevaRonda
-    }
-
-
     fun cambiarDificultat(nuevaDificultat: String) {
         difficulty = nuevaDificultat
     }
-
-
-    var preguntaActual by mutableStateOf(dificultatPreguntes()[round - 1])
-
 
     fun dificultatPreguntes(): List<DificultatPreguntes> {
         return when(difficulty) {
@@ -64,10 +42,34 @@ class SettingsViewModel: ViewModel() {
         }
     }
 
+    var preguntaActual by mutableStateOf(dificultatPreguntes()[round - 1])
+
     fun cambiarPregunta() {
         val listaPreguntas = dificultatPreguntes()
         preguntaActual = listaPreguntas[round - 1]
     }
 
 
+    var modoOscuro by mutableStateOf(false)
+    fun botonModoOscuro() {
+        modoOscuro = !modoOscuro
+    }
+
+
+    var puntos by mutableStateOf(0)
+    fun sumarPunto(sumar: Int) {
+        puntos += sumar
+    }
+
+    fun resetearPuntos() {
+        puntos = 0
+    }
+
+    fun puntuacion(botonSeleccionado: String, botonCorrecto: String) {
+        if (botonSeleccionado[0] == botonCorrecto.first()) {
+            sumarPunto(1)
+        } else {
+            sumarPunto(-1)
+        }
+    }
 }

@@ -12,6 +12,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
@@ -21,13 +25,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.trivial_app.R
+import com.example.trivial_app.navigation.Routes
 
 
 @Composable
 fun MenuScreen(navController: NavController) {
 
     Column(
-
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -45,7 +49,7 @@ fun MenuScreen(navController: NavController) {
 
         }
         Button(
-            onClick = { navController.navigate("GameScreen")},
+            onClick = { navController.navigate(Routes.Pantalla3.route) },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.DarkGray
             ),
@@ -60,7 +64,7 @@ fun MenuScreen(navController: NavController) {
             contentAlignment = Alignment.Center) {
 
             Button(
-                onClick = {  },
+                onClick = { navController.navigate(Routes.Pantalla5.route) },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.DarkGray
                 )

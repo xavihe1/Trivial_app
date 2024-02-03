@@ -41,7 +41,7 @@ import com.example.trivial_app.viewModel.SettingsViewModel
 @Composable
 fun SettingsScreen(navController: NavController, settingsViewModel: SettingsViewModel) {
     val dificultades = listOf("Easy", "Normal", "Hard")
-    var selectedOption by remember { mutableIntStateOf(settingsViewModel.totalDeRondas) }
+    var selectedOption by remember { mutableIntStateOf(settingsViewModel.rondasTotales) }
     var modoOscuro by remember { mutableStateOf(settingsViewModel.modoOscuro) }
 
     Column(

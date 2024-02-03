@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -26,15 +27,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.trivial_app.R
+import com.example.trivial_app.navigation.Routes
 import com.example.trivial_app.viewModel.SettingsViewModel
 import kotlinx.coroutines.delay
 
 @Composable
 fun GameScreen(navController: NavController, settingsViewModel: SettingsViewModel) {
-
-
-
-
+    var tiempoRestante by remember { mutableIntStateOf(15) }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -46,7 +45,7 @@ fun GameScreen(navController: NavController, settingsViewModel: SettingsViewMode
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-        Text(text = "Round ${settingsViewModel.round}/${settingsViewModel.rondas}", modifier = Modifier.padding(60.dp))
+        Text(text = "Round ${settingsViewModel.rondaActual}/${settingsViewModel.rondasTotales}", modifier = Modifier.padding(60.dp))
 
         Text(
             text = settingsViewModel.preguntaActual.preguntes,
@@ -57,7 +56,14 @@ fun GameScreen(navController: NavController, settingsViewModel: SettingsViewMode
         Row(modifier = Modifier.padding(top = 90.dp)) {
             Button(
                 onClick = {
-
+                    settingsViewModel.puntuacion(
+                        settingsViewModel.preguntaActual.opcioA,
+                        settingsViewModel.preguntaActual.respostaCorrecta
+                    )
+                    settingsViewModel.cambiarDeRonda(settingsViewModel.round + 1)
+                    settingsViewModel.cambiarPregunta()
+                    settingsViewModel.rondaActual = settingsViewModel.rondaActual + 1
+                    tiempoRestante = 15
                 },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Blue),
@@ -66,7 +72,16 @@ fun GameScreen(navController: NavController, settingsViewModel: SettingsViewMode
                 Text(text = settingsViewModel.preguntaActual.opcioA)
             }
             Button(
-                onClick = {  },
+                onClick = {
+                    settingsViewModel.puntuacion(
+                        settingsViewModel.preguntaActual.opcioB,
+                        settingsViewModel.preguntaActual.respostaCorrecta
+                    )
+                    settingsViewModel.rondaActual = settingsViewModel.rondaActual + 1
+                    settingsViewModel.cambiarDeRonda(settingsViewModel.round + 1)
+                    settingsViewModel.cambiarPregunta()
+                    tiempoRestante = 15
+                },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Blue),
                 modifier = Modifier.padding(start = 5.dp)
@@ -77,7 +92,16 @@ fun GameScreen(navController: NavController, settingsViewModel: SettingsViewMode
 
         Row(modifier = Modifier.padding(top = 20.dp)) {
             Button(
-                onClick = {  },
+                onClick = {
+                    settingsViewModel.puntuacion(
+                        settingsViewModel.preguntaActual.opcioC,
+                        settingsViewModel.preguntaActual.respostaCorrecta
+                    )
+                    settingsViewModel.rondaActual = settingsViewModel.rondaActual + 1
+                    settingsViewModel.cambiarDeRonda(settingsViewModel.round + 1)
+                    settingsViewModel.cambiarPregunta()
+                    tiempoRestante = 15
+                },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Blue),
                 modifier = Modifier.padding(end = 5.dp)
@@ -85,7 +109,16 @@ fun GameScreen(navController: NavController, settingsViewModel: SettingsViewMode
                 Text(text = settingsViewModel.preguntaActual.opcioC)
             }
             Button(
-                onClick = {  },
+                onClick = {
+                    settingsViewModel.puntuacion(
+                        settingsViewModel.preguntaActual.opcioD,
+                        settingsViewModel.preguntaActual.respostaCorrecta
+                    )
+                    settingsViewModel.rondaActual = settingsViewModel.rondaActual + 1
+                    settingsViewModel.cambiarDeRonda(settingsViewModel.round + 1)
+                    settingsViewModel.cambiarPregunta()
+                    tiempoRestante = 15
+                },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Blue),
                 modifier = Modifier.padding(start = 5.dp)
@@ -99,6 +132,7 @@ fun GameScreen(navController: NavController, settingsViewModel: SettingsViewMode
             CountDownTimer()
         }
     }
+    FinJuego(navController, settingsViewModel, tiempoRestante)
 }
 
 @Composable
@@ -126,5 +160,14 @@ fun CountDownTimer() {
         }
         Text(text = "Time left: $timeLeft")
         LinearProgressIndicator(progress = timeLeft.toFloat() / 15f)
+    }
+}
+
+fun FinJuego(navController: NavController, settingsViewModel: SettingsViewModel, tiempoRestante: Int) {
+    if (tiempoRestante == 0) {
+        settingsViewModel.rondaActual = settingsViewModel.rondasTotales
+        navController.navigate(Routes.Pantalla4.route)
+    } else if (settingsViewModel.rondaActual == settingsViewModel.rondasTotales) {
+        navController.navigate(Routes.Pantalla4.route)
     }
 }

@@ -27,40 +27,34 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.trivial_app.R
 import com.example.trivial_app.viewModel.SettingsViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(navController: NavController, settingsViewModel: SettingsViewModel) {
-    val dificultades = listOf("Easy", "Normal", "Hard")
     var selectedOption by remember { mutableIntStateOf(settingsViewModel.rondasTotales) }
-    var modoOscuro by remember { mutableStateOf(settingsViewModel.modoOscuro) }
+    var encendido = settingsViewModel.modoOscuro
+    var dificultatSeleccionada by remember { mutableStateOf(settingsViewModel.difficulty) }
 
     Column(
         modifier = Modifier
-            .paint(
-                painterResource(id = R.drawable.fondo_pantalla),
-                contentScale = ContentScale.FillBounds
-            )
             .padding(top = 60.dp, start = 5.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-        Row(modifier = Modifier,
+        Row(
+            modifier = Modifier,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
+            val dificultades = listOf("Easy", "Normal", "Hard")
             Text(text = "Difficulty: ")
         
             OutlinedTextField(
-                value = settingsViewModel.selectedText,
+                value = dificultatSeleccionada,
                 onValueChange = { settingsViewModel.selectedText = it },
                 enabled = false,
                 readOnly = true,
@@ -73,13 +67,14 @@ fun SettingsScreen(navController: NavController, settingsViewModel: SettingsView
                 modifier = Modifier
                     .fillMaxWidth()
             ) {
-                dificultades.forEach { dificultat ->
+                dificultades.forEach { label ->
                     DropdownMenuItem(
-                        text = { Text(text = dificultat) },
+                        text = { Text(text = label) },
                         onClick = {
+                            dificultatSeleccionada = label
                             settingsViewModel.expanded = false
-                            settingsViewModel.selectedText = dificultat
-                            settingsViewModel.cambiarDificultat(dificultat)
+                            settingsViewModel.cambiarDificultat(dificultatSeleccionada)
+                            settingsViewModel.cambiarPregunta()
                         })
                     }
                 }
@@ -88,7 +83,9 @@ fun SettingsScreen(navController: NavController, settingsViewModel: SettingsView
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = "Rounds: ", modifier = Modifier.padding(end = 75.dp))
+                Text(text = "Rounds: ",
+                    modifier = Modifier
+                        .padding(end = 75.dp))
                 Column {
                     val numRondas = listOf("5", "10", "15")
                     numRondas.forEach { label ->
@@ -134,8 +131,9 @@ fun SettingsScreen(navController: NavController, settingsViewModel: SettingsView
             Text(text = "Dark mode: ", modifier = Modifier.padding(end = 130.dp))
 
             Switch(
-                checked = settingsViewModel.modoOscuro,
-                onCheckedChange = { modoOscuro = !settingsViewModel.modoOscuro },
+                checked = encendido,
+                onCheckedChange = { encendido = it
+                                  settingsViewModel.botonModoOscuro()},
                 colors = SwitchDefaults.colors(
                     uncheckedThumbColor = Color.Gray,
                     checkedThumbColor = Color.Green

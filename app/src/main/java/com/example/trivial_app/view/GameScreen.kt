@@ -37,10 +37,6 @@ fun GameScreen(navController: NavController, settingsViewModel: SettingsViewMode
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .paint(
-                painterResource(id = R.drawable.fondo_pantalla),
-                contentScale = ContentScale.FillBounds
-            )
             .padding(20.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
@@ -132,12 +128,12 @@ fun GameScreen(navController: NavController, settingsViewModel: SettingsViewMode
             CountDownTimer()
         }
     }
-    FinJuego(navController, settingsViewModel, tiempoRestante)
+    finJuego(navController, settingsViewModel, tiempoRestante)
 }
 
 @Composable
 fun CountDownTimer() {
-    var timeLeft by rememberSaveable { mutableIntStateOf(15) }
+    var timeLeft by rememberSaveable { mutableIntStateOf(20) }
     LaunchedEffect(timeLeft) {
         while (timeLeft > 0) {
             delay(1000L)
@@ -149,21 +145,13 @@ fun CountDownTimer() {
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            Button(onClick = { timeLeft = 15 }) {
-                Text(text = "Restart")
-            }
-        }
+
         Text(text = "Time left: $timeLeft")
-        LinearProgressIndicator(progress = timeLeft.toFloat() / 15f)
+        LinearProgressIndicator(progress = timeLeft.toFloat() / 20f)
     }
 }
 
-fun FinJuego(navController: NavController, settingsViewModel: SettingsViewModel, tiempoRestante: Int) {
+fun finJuego(navController: NavController, settingsViewModel: SettingsViewModel, tiempoRestante: Int) {
     if (tiempoRestante == 0) {
         settingsViewModel.rondaActual = settingsViewModel.rondasTotales
         navController.navigate(Routes.Pantalla4.route)

@@ -32,19 +32,15 @@ import com.example.trivial_app.R
 import com.example.trivial_app.viewModel.SettingsViewModel
 
 @Composable
-fun ResultScreen(navController: NavController, SettingsViewModel: SettingsViewModel) {
-    val puntuacio by remember { mutableIntStateOf(0) }
+fun ResultScreen(navController: NavController, settingsViewModel: SettingsViewModel) {
     
     Column(
-        modifier = Modifier
-            .paint(
-                painterResource(id = R.drawable.fondo_pantalla),
-                contentScale = ContentScale.FillBounds),
+        modifier = Modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Your score is $puntuacio",
+            text = "Your score is ${settingsViewModel.puntos}",
             fontSize = 60.sp,
             fontWeight = FontWeight.Bold,
             fontFamily = FontFamily.Cursive

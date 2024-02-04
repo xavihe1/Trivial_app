@@ -11,7 +11,7 @@ data class DificultatPreguntes(
 )
 
 
-val preguntesFacil = listOf(
+val preguntesFacil: List<DificultatPreguntes> = listOf(
     DificultatPreguntes(
         "A quin continent ens trobem si som a Noruega?",
         "Àsia", "Àfrica", "Amèrica", "Europa",
@@ -89,7 +89,7 @@ val preguntesFacil = listOf(
     )
 )
 
-val preguntesNormal = listOf(
+val preguntesNormal: List<DificultatPreguntes> = listOf(
     DificultatPreguntes(
         "A quin any va començar la Primera Guerra Mundial?",
         "1939", "1905", "1914", "1921",
@@ -167,7 +167,7 @@ val preguntesNormal = listOf(
     )
 )
 
-val preguntesDificil = listOf(
+val preguntesDificil: List<DificultatPreguntes> = listOf(
     DificultatPreguntes(
         "Qun dels seguents elements químics és un gas noble?",
         "Ferro", "Mercuri", "Xenó", "Fòsfor",

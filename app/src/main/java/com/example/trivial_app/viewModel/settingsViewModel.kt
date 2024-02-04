@@ -19,12 +19,11 @@ class SettingsViewModel: ViewModel() {
     var finishValue by mutableStateOf("")
 
 
-
     var rondaActual by mutableIntStateOf(0)
     var rondasTotales by mutableIntStateOf(5)
     var round by mutableIntStateOf(1)
     fun cambiarDeRonda(nuevaRonda: Int) {
-        rondasTotales = nuevaRonda
+        round = nuevaRonda
     }
 
 

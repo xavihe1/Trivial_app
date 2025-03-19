@@ -7,9 +7,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.trivial_app.ui.theme.Trivial_appTheme
 import com.example.trivial_app.view.GameScreen
 import com.example.trivial_app.view.LaunchScreen
@@ -38,7 +40,16 @@ class MainActivity : ComponentActivity() {
                         composable(Routes.Pantalla1.route) { LaunchScreen(navigationController) }
                         composable(Routes.Pantalla2.route) { MenuScreen(navigationController) }
                         composable(Routes.Pantalla3.route) { GameScreen(navigationController, settingsViewModel) }
-                        composable(Routes.Pantalla4.route) { ResultScreen(navigationController, settingsViewModel) }
+                        composable(
+                            Routes.Pantalla4.route,
+                            arguments = listOf(navArgument("victoria") { type = NavType.BoolType})
+                        ) { backStackEntry ->
+                            ResultScreen(
+                                navigationController,
+                                settingsViewModel,
+                                backStackEntry.arguments?.getBoolean("victoria") ?: false
+                            )
+                        }
                         composable(Routes.Pantalla5.route) { SettingsScreen(navigationController, settingsViewModel) }
                     }
                 }

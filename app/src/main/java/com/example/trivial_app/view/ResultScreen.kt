@@ -32,19 +32,22 @@ import com.example.trivial_app.R
 import com.example.trivial_app.viewModel.SettingsViewModel
 
 @Composable
-fun ResultScreen(navController: NavController, settingsViewModel: SettingsViewModel) {
+fun ResultScreen(navController: NavController, settingsViewModel: SettingsViewModel, victoria: Boolean) {
     
     Column(
         modifier = Modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(
-            text = "Your score is ${settingsViewModel.puntos}",
-            fontSize = 60.sp,
-            fontWeight = FontWeight.Bold,
-            fontFamily = FontFamily.Cursive
-        )
+        if (victoria) {
+            Text(
+                text = "Your score is ${settingsViewModel.puntos}",
+                fontSize = 60.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.Cursive
+            )
+        }
+
         Row(modifier = Modifier.padding(top = 50.dp)) {
             Share(text = "Share")
         }

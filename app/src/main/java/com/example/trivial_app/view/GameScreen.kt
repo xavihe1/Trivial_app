@@ -152,10 +152,13 @@ fun CountDownTimer() {
 }
 
 fun finJuego(navController: NavController, settingsViewModel: SettingsViewModel, tiempoRestante: Int) {
+    var victoria = false
     if (tiempoRestante == 0) {
         settingsViewModel.rondaActual = settingsViewModel.rondasTotales
-        navController.navigate(Routes.Pantalla4.route)
+        victoria = false
+        navController.navigate(Routes.Pantalla4.createRoute(victoria))
     } else if (settingsViewModel.rondaActual == settingsViewModel.rondasTotales) {
+        victoria = true
         navController.navigate(Routes.Pantalla4.route)
     }
 }

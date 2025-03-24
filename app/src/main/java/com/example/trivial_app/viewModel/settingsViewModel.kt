@@ -15,15 +15,17 @@ import com.example.trivial_app.model.preguntesNormal
 class SettingsViewModel: ViewModel() {
     var selectedText by mutableStateOf("")
     var expanded by mutableStateOf(false)
-    var sliderValue by mutableFloatStateOf(0f)
-    var finishValue by mutableStateOf("")
-
-
-    var rondaActual by mutableIntStateOf(0)
+    var sliderValue by mutableFloatStateOf(10f)
+    var finishValue by mutableStateOf("10")
+    var rondaActual by mutableIntStateOf(1)
     var rondasTotales by mutableIntStateOf(5)
-    var round by mutableIntStateOf(1)
-    fun cambiarDeRonda(nuevaRonda: Int) {
-        round = nuevaRonda
+
+    fun cambiarDeRonda() {
+        rondaActual++
+    }
+
+    fun resetRonda() {
+        rondaActual = 1
     }
 
 
@@ -41,11 +43,13 @@ class SettingsViewModel: ViewModel() {
         }
     }
 
-    var preguntaActual by mutableStateOf(dificultatPreguntes()[round - 1])
+    var preguntaActual by mutableStateOf(dificultatPreguntes()[rondaActual - 1])
 
     fun cambiarPregunta() {
         val listaPreguntas = dificultatPreguntes()
-        preguntaActual = listaPreguntas[round - 1]
+        if (rondaActual <= rondasTotales) {
+            preguntaActual = listaPreguntas[rondaActual - 1]
+        }
     }
 
 
@@ -70,5 +74,10 @@ class SettingsViewModel: ViewModel() {
         } else {
             sumarPunto(-1)
         }
+    }
+
+    var tiempoRonda by mutableIntStateOf(10)
+    fun cambiarTiempoRonda(nuevoTiempo: Int) {
+        tiempoRonda = nuevoTiempo
     }
 }

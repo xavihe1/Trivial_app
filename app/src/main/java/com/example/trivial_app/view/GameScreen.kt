@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -33,108 +34,132 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun GameScreen(navController: NavController, settingsViewModel: SettingsViewModel) {
-    var tiempoRestante by remember { mutableIntStateOf(15) }
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(20.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
-    ) {
-        Text(text = "Round ${settingsViewModel.rondaActual}/${settingsViewModel.rondasTotales}", modifier = Modifier.padding(60.dp))
+    var tiempoRestante by remember { mutableIntStateOf(settingsViewModel.tiempoRonda) }
+    var juegoTerminado by remember { mutableStateOf(false) }
 
-        Text(
-            text = settingsViewModel.preguntaActual.preguntes,
-            modifier = Modifier
-                .padding(top = 80.dp)
-        )
-
-        Row(modifier = Modifier.padding(top = 90.dp)) {
-            Button(
-                onClick = {
-                    settingsViewModel.puntuacion(
-                        settingsViewModel.preguntaActual.opcioA,
-                        settingsViewModel.preguntaActual.respostaCorrecta
-                    )
-                    settingsViewModel.cambiarDeRonda(settingsViewModel.round + 1)
-                    settingsViewModel.cambiarPregunta()
-                    settingsViewModel.rondaActual = settingsViewModel.rondaActual + 1
-                    tiempoRestante = 15
-                },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Blue),
-                modifier = Modifier.padding(end = 5.dp)
-            ) {
-                Text(text = settingsViewModel.preguntaActual.opcioA)
-            }
-            Button(
-                onClick = {
-                    settingsViewModel.puntuacion(
-                        settingsViewModel.preguntaActual.opcioB,
-                        settingsViewModel.preguntaActual.respostaCorrecta
-                    )
-                    settingsViewModel.rondaActual = settingsViewModel.rondaActual + 1
-                    settingsViewModel.cambiarDeRonda(settingsViewModel.round + 1)
-                    settingsViewModel.cambiarPregunta()
-                    tiempoRestante = 15
-                },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Blue),
-                modifier = Modifier.padding(start = 5.dp)
-            ) {
-                Text(text = settingsViewModel.preguntaActual.opcioB)
-            }
-        }
-
-        Row(modifier = Modifier.padding(top = 20.dp)) {
-            Button(
-                onClick = {
-                    settingsViewModel.puntuacion(
-                        settingsViewModel.preguntaActual.opcioC,
-                        settingsViewModel.preguntaActual.respostaCorrecta
-                    )
-                    settingsViewModel.rondaActual = settingsViewModel.rondaActual + 1
-                    settingsViewModel.cambiarDeRonda(settingsViewModel.round + 1)
-                    settingsViewModel.cambiarPregunta()
-                    tiempoRestante = 15
-                },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Blue),
-                modifier = Modifier.padding(end = 5.dp)
-            ) {
-                Text(text = settingsViewModel.preguntaActual.opcioC)
-            }
-            Button(
-                onClick = {
-                    settingsViewModel.puntuacion(
-                        settingsViewModel.preguntaActual.opcioD,
-                        settingsViewModel.preguntaActual.respostaCorrecta
-                    )
-                    settingsViewModel.rondaActual = settingsViewModel.rondaActual + 1
-                    settingsViewModel.cambiarDeRonda(settingsViewModel.round + 1)
-                    settingsViewModel.cambiarPregunta()
-                    tiempoRestante = 15
-                },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Blue),
-                modifier = Modifier.padding(start = 5.dp)
-            ) {
-                Text(text = settingsViewModel.preguntaActual.opcioD)
-            }
-        }
-        Row(
-            modifier = Modifier
-                .padding(top = 70.dp)) {
-            CountDownTimer()
+    LaunchedEffect(key1 = tiempoRestante, key2 = settingsViewModel.rondaActual) {
+        if (tiempoRestante > 0 && settingsViewModel.rondaActual <= settingsViewModel.rondasTotales) {
+            delay(1000L)
+            tiempoRestante--
+        } else if (tiempoRestante == 0) {
+            juegoTerminado = true
         }
     }
-    finJuego(navController, settingsViewModel, tiempoRestante)
+
+    if (juegoTerminado || settingsViewModel.rondaActual > settingsViewModel.rondasTotales) {
+        val victoria = settingsViewModel.rondaActual > settingsViewModel.rondasTotales
+        LaunchedEffect(Unit) {
+            navController.navigate(Routes.Pantalla4.createRoute(victoria))
+            settingsViewModel.resetRonda()
+        }
+    } else {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top
+        ) {
+            Text(
+                text = "Round ${settingsViewModel.rondaActual}/${settingsViewModel.rondasTotales}",
+                modifier = Modifier
+                    .padding(60.dp)
+            )
+
+            Text(
+                text = settingsViewModel.preguntaActual.preguntes,
+                modifier = Modifier
+                    .padding(top = 80.dp)
+            )
+
+            Row(modifier = Modifier.padding(top = 90.dp)) {
+                Button(
+                    onClick = {
+                        settingsViewModel.puntuacion(
+                            settingsViewModel.preguntaActual.opcioA,
+                            settingsViewModel.preguntaActual.respostaCorrecta
+                        )
+                        settingsViewModel.cambiarDeRonda()
+                        settingsViewModel.cambiarPregunta()
+                        tiempoRestante = settingsViewModel.tiempoRonda
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Blue
+                    ),
+                    modifier = Modifier.padding(end = 5.dp)
+                ) {
+                    Text(text = settingsViewModel.preguntaActual.opcioA)
+                }
+                Button(
+                    onClick = {
+                        settingsViewModel.puntuacion(
+                            settingsViewModel.preguntaActual.opcioB,
+                            settingsViewModel.preguntaActual.respostaCorrecta
+                        )
+                        settingsViewModel.cambiarDeRonda()
+                        settingsViewModel.cambiarPregunta()
+                        tiempoRestante = settingsViewModel.tiempoRonda
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Blue
+                    ),
+                    modifier = Modifier.padding(start = 5.dp)
+                ) {
+                    Text(text = settingsViewModel.preguntaActual.opcioB)
+                }
+            }
+
+            Row(modifier = Modifier.padding(top = 20.dp)) {
+                Button(
+                    onClick = {
+                        settingsViewModel.puntuacion(
+                            settingsViewModel.preguntaActual.opcioC,
+                            settingsViewModel.preguntaActual.respostaCorrecta
+                        )
+                        settingsViewModel.cambiarDeRonda()
+                        settingsViewModel.cambiarPregunta()
+                        tiempoRestante = settingsViewModel.tiempoRonda
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Blue
+                    ),
+                    modifier = Modifier.padding(end = 5.dp)
+                ) {
+                    Text(text = settingsViewModel.preguntaActual.opcioC)
+                }
+                Button(
+                    onClick = {
+                        settingsViewModel.puntuacion(
+                            settingsViewModel.preguntaActual.opcioD,
+                            settingsViewModel.preguntaActual.respostaCorrecta
+                        )
+                        settingsViewModel.cambiarDeRonda()
+                        settingsViewModel.cambiarPregunta()
+                        tiempoRestante = settingsViewModel.tiempoRonda
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Blue
+                    ),
+                    modifier = Modifier.padding(start = 5.dp)
+                ) {
+                    Text(text = settingsViewModel.preguntaActual.opcioD)
+                }
+            }
+            Row(
+                modifier = Modifier
+                    .padding(top = 70.dp)
+            ) {
+                CountDownTimer(tiempoRestante, settingsViewModel)
+            }
+        }
+    }
 }
 
 @Composable
-fun CountDownTimer() {
-    var timeLeft by rememberSaveable { mutableIntStateOf(20) }
-    LaunchedEffect(timeLeft) {
+fun CountDownTimer(tiempoRestante: Int, settingsViewModel: SettingsViewModel) {
+    var timeLeft by rememberSaveable { mutableIntStateOf(tiempoRestante) }
+    LaunchedEffect(key1 = tiempoRestante) {
+        timeLeft = tiempoRestante
         while (timeLeft > 0) {
             delay(1000L)
             timeLeft--
@@ -145,20 +170,8 @@ fun CountDownTimer() {
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
         Text(text = "Time left: $timeLeft")
-        LinearProgressIndicator(progress = timeLeft.toFloat() / 20f)
+        LinearProgressIndicator(progress = timeLeft.toFloat() / settingsViewModel.tiempoRonda.toFloat())
     }
 }
 
-fun finJuego(navController: NavController, settingsViewModel: SettingsViewModel, tiempoRestante: Int) {
-    var victoria = false
-    if (tiempoRestante == 0) {
-        settingsViewModel.rondaActual = settingsViewModel.rondasTotales
-        victoria = false
-        navController.navigate(Routes.Pantalla4.createRoute(victoria))
-    } else if (settingsViewModel.rondaActual == settingsViewModel.rondasTotales) {
-        victoria = true
-        navController.navigate(Routes.Pantalla4.route)
-    }
-}

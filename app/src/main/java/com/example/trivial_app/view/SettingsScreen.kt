@@ -36,7 +36,7 @@ import com.example.trivial_app.viewModel.SettingsViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(navController: NavController, settingsViewModel: SettingsViewModel) {
-    var selectedOption by remember { mutableIntStateOf(settingsViewModel.rondasTotales) }
+    var selectedOption = settingsViewModel.rondasTotales
     var encendido = settingsViewModel.modoOscuro
     var dificultatSeleccionada by remember { mutableStateOf(settingsViewModel.difficulty) }
 
@@ -96,8 +96,7 @@ fun SettingsScreen(navController: NavController, settingsViewModel: SettingsView
                             RadioButton(
                                 selected = selectedOption.toString() == label,
                                 onClick = {
-                                    selectedOption = label.toInt()
-                                    settingsViewModel.cambiarDeRonda(selectedOption) },
+                                    settingsViewModel.rondasTotales = label.toInt() },
                                 colors = RadioButtonDefaults.colors(
                                     selectedColor = Color.Blue,
                                     unselectedColor = Color.Gray
@@ -115,10 +114,13 @@ fun SettingsScreen(navController: NavController, settingsViewModel: SettingsView
 
             Slider(
                 value = settingsViewModel.sliderValue,
-                onValueChange = { settingsViewModel.sliderValue = it },
+                onValueChange = {
+                    settingsViewModel.sliderValue = it
+                    settingsViewModel.cambiarTiempoRonda(it.toInt())
+                                },
                 onValueChangeFinished = { settingsViewModel.finishValue = settingsViewModel.sliderValue.toString() },
-                valueRange = 0f..15f,
-                steps = 14,
+                valueRange = 5f..15f,
+                steps = 9,
                 colors = SliderDefaults.colors(
                     activeTickColor = Color.Transparent,
                     inactiveTickColor = Color.Transparent)

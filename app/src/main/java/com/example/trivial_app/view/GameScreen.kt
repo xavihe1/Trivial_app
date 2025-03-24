@@ -36,13 +36,27 @@ import kotlinx.coroutines.delay
 fun GameScreen(navController: NavController, settingsViewModel: SettingsViewModel) {
     var tiempoRestante by remember { mutableIntStateOf(settingsViewModel.tiempoRonda) }
     var juegoTerminado by remember { mutableStateOf(false) }
+    var tiempoAgotado by remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = tiempoRestante, key2 = settingsViewModel.rondaActual) {
         if (tiempoRestante > 0 && settingsViewModel.rondaActual <= settingsViewModel.rondasTotales) {
             delay(1000L)
             tiempoRestante--
         } else if (tiempoRestante == 0) {
-            juegoTerminado = true
+            tiempoAgotado = true
+        }
+    }
+
+    LaunchedEffect(tiempoAgotado) {
+        if (tiempoAgotado) {
+            if (settingsViewModel.rondaActual < settingsViewModel.rondasTotales) {
+                settingsViewModel.cambiarDeRonda()
+                settingsViewModel.cambiarPregunta()
+                tiempoRestante = settingsViewModel.tiempoRonda
+            } else {
+                juegoTerminado = true
+            }
+            tiempoAgotado = false
         }
     }
 

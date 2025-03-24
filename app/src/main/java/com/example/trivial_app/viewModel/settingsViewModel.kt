@@ -20,15 +20,8 @@ class SettingsViewModel: ViewModel() {
     var rondaActual by mutableIntStateOf(1)
     var rondasTotales by mutableIntStateOf(5)
 
-    fun cambiarDeRonda() {
-        rondaActual++
-    }
 
-    fun resetRonda() {
-        rondaActual = 1
-    }
-
-
+    //Selector de dificultats
     var difficulty: String by mutableStateOf("Easy")
     fun cambiarDificultat(nuevaDificultat: String) {
         difficulty = nuevaDificultat
@@ -43,7 +36,17 @@ class SettingsViewModel: ViewModel() {
         }
     }
 
+
+    //Numero de rondes
     var preguntaActual by mutableStateOf(dificultatPreguntes()[rondaActual - 1])
+
+    fun cambiarDeRonda() {
+        rondaActual++
+    }
+
+    fun resetRonda() {
+        rondaActual = 1
+    }
 
     fun cambiarPregunta() {
         val listaPreguntas = dificultatPreguntes()
@@ -53,12 +56,14 @@ class SettingsViewModel: ViewModel() {
     }
 
 
-    var modoOscuro by mutableStateOf(false)
-    fun botonModoOscuro() {
-        modoOscuro = !modoOscuro
+    //Slider temps per ronda
+    var tiempoRonda by mutableIntStateOf(10)
+    fun cambiarTiempoRonda(nuevoTiempo: Int) {
+        tiempoRonda = nuevoTiempo
     }
 
 
+    //Puntuació joc
     var puntos by mutableStateOf(0)
     fun sumarPunto(sumar: Int) {
         puntos += sumar
@@ -76,8 +81,10 @@ class SettingsViewModel: ViewModel() {
         }
     }
 
-    var tiempoRonda by mutableIntStateOf(10)
-    fun cambiarTiempoRonda(nuevoTiempo: Int) {
-        tiempoRonda = nuevoTiempo
+
+    //Modo oscuro
+    var modoOscuro by mutableStateOf(false)
+    fun botonModoOscuro() {
+        modoOscuro = !modoOscuro
     }
 }

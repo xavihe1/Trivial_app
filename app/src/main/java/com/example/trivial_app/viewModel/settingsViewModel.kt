@@ -67,6 +67,9 @@ class SettingsViewModel: ViewModel() {
     var puntos by mutableStateOf(0)
     fun sumarPunto(sumar: Int) {
         puntos += sumar
+        if (puntos < 0) {
+            puntos = 0
+        }
     }
 
     fun resetearPuntos() {

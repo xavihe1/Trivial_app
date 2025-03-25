@@ -9,8 +9,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -36,7 +38,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.trivial_app.R
 import com.example.trivial_app.navigation.Routes
@@ -49,7 +53,9 @@ fun MenuScreen(navController: NavController) {
     var selectedText by remember { mutableStateOf("Easy") }
     var expanded by remember { mutableStateOf(false) }
     val difficulty = listOf("Easy", "Normal", "Hard")
-    val rojoCarmesi = colorResource(id = R.color.rojo_carmesi)
+    val playButtonColor = colorResource(id = R.color.play_button)
+    val settingsButtonColor = colorResource(id = R.color.settings_button)
+    val buttonTextColor = colorResource(id = R.color.white)
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -60,7 +66,7 @@ fun MenuScreen(navController: NavController) {
             contentDescription = null,
             modifier = Modifier
                 .padding(70.dp)
-                .size(250.dp)
+                .size(300.dp)
         )
 
         Button(
@@ -69,27 +75,48 @@ fun MenuScreen(navController: NavController) {
                 settingsViewModel.resetRonda()
                       },
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color.DarkGray
+                containerColor = playButtonColor,
+                contentColor = buttonTextColor
             ),
+            modifier = Modifier
+                .width(200.dp)
+                .height(56.dp)
+                .padding(vertical = 8.dp),
+            shape = RoundedCornerShape(12.dp),
+            elevation = ButtonDefaults.buttonElevation(
+                defaultElevation = 4.dp,
+                pressedElevation = 8.dp
+            )
 
         ) {
             Text(
-                text = "PLAY")
-        }
-        Box(
-            modifier = Modifier
-                .padding(20.dp),
-            contentAlignment = Alignment.Center) {
-
-            Button(
-                onClick = { navController.navigate(Routes.Pantalla5.route) },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.DarkGray
+                text = "PLAY",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold
                 )
-            ) {
-                Text(
-                    text = "SETTINGS")
-            }
+        }
+
+        Button(
+            onClick = { navController.navigate(Routes.Pantalla5.route) },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = settingsButtonColor,
+                contentColor = buttonTextColor
+            ),
+            modifier = Modifier
+                .width(200.dp)
+                .height(56.dp)
+                .padding(vertical = 8.dp),
+            shape = RoundedCornerShape(12.dp),
+            elevation = ButtonDefaults.buttonElevation(
+                defaultElevation = 4.dp,
+                pressedElevation = 8.dp
+            )
+        ) {
+            Text(
+                text = "SETTINGS",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold
+                )
         }
     }
 }

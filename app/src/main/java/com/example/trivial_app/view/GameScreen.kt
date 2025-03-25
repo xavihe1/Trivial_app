@@ -5,7 +5,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.LinearProgressIndicator
@@ -20,12 +22,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.trivial_app.R
 import com.example.trivial_app.navigation.Routes
@@ -37,6 +39,14 @@ fun GameScreen(navController: NavController, settingsViewModel: SettingsViewMode
     var tiempoRestante by remember { mutableIntStateOf(settingsViewModel.tiempoRonda) }
     var juegoTerminado by remember { mutableStateOf(false) }
     var tiempoAgotado by remember { mutableStateOf(false) }
+    val textPrimaryColor = colorResource(id = R.color.text_primary)
+    val textSecondaryColor = colorResource(id = R.color.text_secondary)
+    val buttonColors = listOf(
+        colorResource(id = R.color.verde),
+        colorResource(id = R.color.azul),
+        colorResource(id = R.color.amarillo),
+        colorResource(id = R.color.rojo)
+    )
 
     LaunchedEffect(key1 = tiempoRestante, key2 = settingsViewModel.rondaActual) {
         if (tiempoRestante > 0 && settingsViewModel.rondaActual <= settingsViewModel.rondasTotales) {
@@ -57,6 +67,7 @@ fun GameScreen(navController: NavController, settingsViewModel: SettingsViewMode
                 juegoTerminado = true
             }
             tiempoAgotado = false
+            settingsViewModel.sumarPunto(0)
         }
     }
 
@@ -65,6 +76,7 @@ fun GameScreen(navController: NavController, settingsViewModel: SettingsViewMode
         LaunchedEffect(Unit) {
             navController.navigate(Routes.Pantalla4.createRoute(victoria))
             settingsViewModel.resetRonda()
+            settingsViewModel.resetearPuntos()
         }
     } else {
         Column(
@@ -77,16 +89,29 @@ fun GameScreen(navController: NavController, settingsViewModel: SettingsViewMode
             Text(
                 text = "Round ${settingsViewModel.rondaActual}/${settingsViewModel.rondasTotales}",
                 modifier = Modifier
-                    .padding(60.dp)
+                    .padding(vertical = 32.dp),
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = textPrimaryColor
             )
 
             Text(
                 text = settingsViewModel.preguntaActual.preguntes,
                 modifier = Modifier
-                    .padding(top = 80.dp)
+                    .padding(top = 48.dp, bottom = 32.dp)
+                    .fillMaxWidth(0.9f),
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Medium,
+                textAlign = TextAlign.Center,
+                color = textPrimaryColor
             )
 
-            Row(modifier = Modifier.padding(top = 90.dp)) {
+            Row(
+                modifier = Modifier
+                    .padding(top = 24.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
                 Button(
                     onClick = {
                         settingsViewModel.puntuacion(
@@ -98,11 +123,24 @@ fun GameScreen(navController: NavController, settingsViewModel: SettingsViewMode
                         tiempoRestante = settingsViewModel.tiempoRonda
                     },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Blue
+                        containerColor = buttonColors[0],
+                        contentColor = Color.White
                     ),
-                    modifier = Modifier.padding(end = 5.dp)
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 8.dp)
+                        .height(56.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    elevation = ButtonDefaults.buttonElevation(
+                        defaultElevation = 4.dp,
+                        pressedElevation = 8.dp
+                    )
                 ) {
-                    Text(text = settingsViewModel.preguntaActual.opcioA)
+                    Text(
+                        text = settingsViewModel.preguntaActual.opcioA,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
                 }
                 Button(
                     onClick = {
@@ -115,15 +153,33 @@ fun GameScreen(navController: NavController, settingsViewModel: SettingsViewMode
                         tiempoRestante = settingsViewModel.tiempoRonda
                     },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Blue
+                        containerColor = buttonColors[0],
+                        contentColor = Color.White
                     ),
-                    modifier = Modifier.padding(start = 5.dp)
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 8.dp)
+                        .height(56.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    elevation = ButtonDefaults.buttonElevation(
+                        defaultElevation = 4.dp,
+                        pressedElevation = 8.dp
+                    )
                 ) {
-                    Text(text = settingsViewModel.preguntaActual.opcioB)
+                    Text(
+                        text = settingsViewModel.preguntaActual.opcioB,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
                 }
             }
 
-            Row(modifier = Modifier.padding(top = 20.dp)) {
+            Row(
+                modifier = Modifier
+                    .padding(top = 16.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
                 Button(
                     onClick = {
                         settingsViewModel.puntuacion(
@@ -135,11 +191,24 @@ fun GameScreen(navController: NavController, settingsViewModel: SettingsViewMode
                         tiempoRestante = settingsViewModel.tiempoRonda
                     },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Blue
+                        containerColor = buttonColors[0],
+                        contentColor = Color.White
                     ),
-                    modifier = Modifier.padding(end = 5.dp)
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 8.dp)
+                        .height(56.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    elevation = ButtonDefaults.buttonElevation(
+                        defaultElevation = 4.dp,
+                        pressedElevation = 8.dp
+                    )
                 ) {
-                    Text(text = settingsViewModel.preguntaActual.opcioC)
+                    Text(
+                        text = settingsViewModel.preguntaActual.opcioC,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold
+                        )
                 }
                 Button(
                     onClick = {
@@ -152,26 +221,40 @@ fun GameScreen(navController: NavController, settingsViewModel: SettingsViewMode
                         tiempoRestante = settingsViewModel.tiempoRonda
                     },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Blue
+                        containerColor = buttonColors[0],
+                        contentColor = Color.White
                     ),
-                    modifier = Modifier.padding(start = 5.dp)
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 8.dp)
+                        .height(56.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    elevation = ButtonDefaults.buttonElevation(
+                        defaultElevation = 4.dp,
+                        pressedElevation = 8.dp
+                    )
                 ) {
-                    Text(text = settingsViewModel.preguntaActual.opcioD)
+                    Text(
+                        text = settingsViewModel.preguntaActual.opcioD,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold
+                        )
                 }
             }
             Row(
                 modifier = Modifier
                     .padding(top = 70.dp)
             ) {
-                CountDownTimer(tiempoRestante, settingsViewModel)
+                CountDownTimer(tiempoRestante, settingsViewModel, progressColor = Color.Green, textColor = Color.Black)
             }
         }
     }
 }
 
 @Composable
-fun CountDownTimer(tiempoRestante: Int, settingsViewModel: SettingsViewModel) {
+fun CountDownTimer(tiempoRestante: Int, settingsViewModel: SettingsViewModel, progressColor: Color, textColor: Color) {
     var timeLeft by rememberSaveable { mutableIntStateOf(tiempoRestante) }
+
     LaunchedEffect(key1 = tiempoRestante) {
         timeLeft = tiempoRestante
         while (timeLeft > 0) {
@@ -184,8 +267,20 @@ fun CountDownTimer(tiempoRestante: Int, settingsViewModel: SettingsViewModel) {
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Time left: $timeLeft")
-        LinearProgressIndicator(progress = timeLeft.toFloat() / settingsViewModel.tiempoRonda.toFloat())
+        Text(
+            text = "Time left: $timeLeft",
+            color = textColor,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Medium,
+            modifier = Modifier.padding(bottom = 8.dp)
+            )
+        LinearProgressIndicator(
+            progress = timeLeft.toFloat() / settingsViewModel.tiempoRonda.toFloat(),
+            color = progressColor,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(8.dp),
+            trackColor = Color.LightGray,
+            )
     }
 }
-

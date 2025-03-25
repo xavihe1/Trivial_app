@@ -8,4 +8,16 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="rojo_carmesi">#DC143C</color>
+    <color name="naranja">#FF5722</color>
+    <color name="naranja_light">#FF8A65</color>
+    <color name="naranja_oscuro">#E64A19</color>
+    <color name="verde">#4CAF50</color>
+    <color name="azul">#2196F3</color>
+    <color name="amarillo">#FFC107</color>
+    <color name="rojo">#F44336</color>
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+    <color name="background">#FAFAFA</color>
+    <color name="play_button">#E53935</color>
+    <color name="settings_button">#5E35B1</color>
 </resources>

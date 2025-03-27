@@ -5,7 +5,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
@@ -28,23 +31,34 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.trivial_app.R
 import com.example.trivial_app.viewModel.SettingsViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(navController: NavController, settingsViewModel: SettingsViewModel) {
+    val menuButton = colorResource(id = R.color.azul)
+    val buttonTextColor = colorResource(id = R.color.white)
+    val radioSelected = colorResource(id = R.color.azul)
+    val switchTrackChecked = Color(0xFF81C784)
+    val sliderActive = colorResource(id = R.color.azul)
+    val sliderInactive = Color.LightGray
+
     var selectedOption = settingsViewModel.rondasTotales
     var encendido = settingsViewModel.modoOscuro
     var dificultatSeleccionada by remember { mutableStateOf(settingsViewModel.difficulty) }
 
     Column(
         modifier = Modifier
-            .padding(top = 60.dp, start = 5.dp),
+            .padding(horizontal = 24.dp, vertical = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
+        verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
         Row(
             modifier = Modifier,
@@ -52,7 +66,7 @@ fun SettingsScreen(navController: NavController, settingsViewModel: SettingsView
         ) {
             val dificultades = listOf("Easy", "Normal", "Hard")
             Text(text = "Difficulty: ")
-        
+
             OutlinedTextField(
                 value = dificultatSeleccionada,
                 onValueChange = { settingsViewModel.selectedText = it },
@@ -60,16 +74,18 @@ fun SettingsScreen(navController: NavController, settingsViewModel: SettingsView
                 readOnly = true,
                 modifier = Modifier
                     .clickable { settingsViewModel.expanded = true }
+                    .weight(1f),
+                shape = RoundedCornerShape(12.dp)
             )
             DropdownMenu(
                 expanded = settingsViewModel.expanded,
                 onDismissRequest = { settingsViewModel.expanded = false },
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(0.8f)
             ) {
                 dificultades.forEach { label ->
                     DropdownMenuItem(
-                        text = { Text(text = label) },
+                        text = { Text(text = label, fontSize = 18.sp, fontWeight = FontWeight.SemiBold) },
                         onClick = {
                             dificultatSeleccionada = label
                             settingsViewModel.expanded = false
@@ -79,38 +95,49 @@ fun SettingsScreen(navController: NavController, settingsViewModel: SettingsView
                     }
                 }
             }
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(text = "Rounds: ",
                     modifier = Modifier
                         .padding(end = 75.dp))
-                Column {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
                     val numRondas = listOf("5", "10", "15")
                     numRondas.forEach { label ->
                         Row(
-                            horizontalArrangement = Arrangement.Center,
-                            verticalAlignment = Alignment.CenterVertically
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.fillMaxWidth()
                         ) {
                             RadioButton(
                                 selected = selectedOption.toString() == label,
                                 onClick = {
                                     settingsViewModel.rondasTotales = label.toInt() },
                                 colors = RadioButtonDefaults.colors(
-                                    selectedColor = Color.Blue,
+                                    selectedColor = radioSelected,
                                     unselectedColor = Color.Gray
                                 )
                             )
-                            Text(text = label)
+                            Text(
+                                text = label,
+                                modifier = Modifier.padding(start = 8.dp)
+                                )
                         }
                     }
                 }
             }
-        Row(modifier = Modifier.padding(35.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Text(text = "Time per round: ")
+            Text(
+                text = "Time per round: ",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold
+                )
 
             Slider(
                 value = settingsViewModel.sliderValue,
@@ -122,23 +149,38 @@ fun SettingsScreen(navController: NavController, settingsViewModel: SettingsView
                 valueRange = 5f..15f,
                 steps = 9,
                 colors = SliderDefaults.colors(
+                    thumbColor = sliderActive,
+                    activeTrackColor = sliderActive,
+                    inactiveTrackColor = sliderInactive,
                     activeTickColor = Color.Transparent,
-                    inactiveTickColor = Color.Transparent)
+                    inactiveTickColor = Color.Transparent
+                ),
+                modifier = Modifier.fillMaxWidth()
             )
 
         }
-        Row(modifier = Modifier.padding(35.dp),
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(text = "Dark mode: ", modifier = Modifier.padding(end = 130.dp))
+            Text(
+                text = "Dark mode: ",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold
+            )
 
             Switch(
                 checked = encendido,
-                onCheckedChange = { encendido = it
-                                  settingsViewModel.botonModoOscuro()},
+                onCheckedChange = {
+                    encendido = it
+                    settingsViewModel.botonModoOscuro()
+                                  },
                 colors = SwitchDefaults.colors(
-                    uncheckedThumbColor = Color.Gray,
-                    checkedThumbColor = Color.Green
+                    checkedThumbColor = Color.White,
+                    checkedTrackColor = switchTrackChecked,
+                    uncheckedThumbColor = Color.White,
+                    uncheckedTrackColor = Color.Gray
                 )
             )
         }
@@ -148,10 +190,24 @@ fun SettingsScreen(navController: NavController, settingsViewModel: SettingsView
             Button(
                 onClick = { navController.navigate("MenuScreen") },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.DarkGray
+                    containerColor = menuButton,
+                    contentColor = buttonTextColor
+                ),
+                modifier = Modifier
+                    .width(200.dp)
+                    .height(56.dp)
+                    .padding(vertical = 8.dp),
+                shape = RoundedCornerShape(12.dp),
+                elevation = ButtonDefaults.buttonElevation(
+                    defaultElevation = 4.dp,
+                    pressedElevation = 8.dp
                 )
             ) {
-                Text(text = "Return to menu")
+                Text(
+                    text = "Return to menu",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.SemiBold
+                    )
             }
         }
     }

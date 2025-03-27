@@ -39,8 +39,6 @@ fun GameScreen(navController: NavController, settingsViewModel: SettingsViewMode
     var tiempoRestante by remember { mutableIntStateOf(settingsViewModel.tiempoRonda) }
     var juegoTerminado by remember { mutableStateOf(false) }
     var tiempoAgotado by remember { mutableStateOf(false) }
-    val textPrimaryColor = colorResource(id = R.color.text_primary)
-    val textSecondaryColor = colorResource(id = R.color.text_secondary)
     val buttonColors = listOf(
         colorResource(id = R.color.verde),
         colorResource(id = R.color.azul),
@@ -91,8 +89,7 @@ fun GameScreen(navController: NavController, settingsViewModel: SettingsViewMode
                 modifier = Modifier
                     .padding(vertical = 32.dp),
                 fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                color = textPrimaryColor
+                fontWeight = FontWeight.Bold
             )
 
             Text(
@@ -102,8 +99,7 @@ fun GameScreen(navController: NavController, settingsViewModel: SettingsViewMode
                     .fillMaxWidth(0.9f),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Medium,
-                textAlign = TextAlign.Center,
-                color = textPrimaryColor
+                textAlign = TextAlign.Center
             )
 
             Row(
@@ -245,14 +241,14 @@ fun GameScreen(navController: NavController, settingsViewModel: SettingsViewMode
                 modifier = Modifier
                     .padding(top = 70.dp)
             ) {
-                CountDownTimer(tiempoRestante, settingsViewModel, progressColor = Color.Green, textColor = Color.Black)
+                CountDownTimer(tiempoRestante, settingsViewModel, progressColor = Color.Green)
             }
         }
     }
 }
 
 @Composable
-fun CountDownTimer(tiempoRestante: Int, settingsViewModel: SettingsViewModel, progressColor: Color, textColor: Color) {
+fun CountDownTimer(tiempoRestante: Int, settingsViewModel: SettingsViewModel, progressColor: Color) {
     var timeLeft by rememberSaveable { mutableIntStateOf(tiempoRestante) }
 
     LaunchedEffect(key1 = tiempoRestante) {
@@ -269,7 +265,6 @@ fun CountDownTimer(tiempoRestante: Int, settingsViewModel: SettingsViewModel, pr
     ) {
         Text(
             text = "Time left: $timeLeft",
-            color = textColor,
             fontSize = 16.sp,
             fontWeight = FontWeight.Medium,
             modifier = Modifier.padding(bottom = 8.dp)

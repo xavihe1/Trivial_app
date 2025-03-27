@@ -4,7 +4,10 @@ import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Button
@@ -21,6 +24,7 @@ import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -33,6 +37,8 @@ import com.example.trivial_app.viewModel.SettingsViewModel
 
 @Composable
 fun ResultScreen(navController: NavController, settingsViewModel: SettingsViewModel, victoria: Boolean) {
+    val buttonColor = colorResource(id = R.color.azul)
+    val buttonTextColor = colorResource(id = R.color.white)
     val puntos = settingsViewModel.puntos
     Column(
         modifier = Modifier,
@@ -51,13 +57,26 @@ fun ResultScreen(navController: NavController, settingsViewModel: SettingsViewMo
         }
         
         Button(
-            modifier = Modifier.padding(top = 30.dp),
+            modifier = Modifier
+                .width(200.dp)
+                .height(56.dp)
+                .padding(vertical = 8.dp),
             onClick = { navController.navigate("MenuScreen") },
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color.DarkGray
+                containerColor = buttonColor,
+                contentColor = buttonTextColor
+            ),
+            shape = RoundedCornerShape(12.dp),
+            elevation = ButtonDefaults.buttonElevation(
+                defaultElevation = 4.dp,
+                pressedElevation = 8.dp
             )
         ) {
-            Text(text = "Return to menu")
+            Text(
+                text = "Return to menu",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold
+                )
         }
     }
 }
@@ -65,6 +84,8 @@ fun ResultScreen(navController: NavController, settingsViewModel: SettingsViewMo
 
 @Composable
 fun Share(text: String) {
+    val buttonShare = colorResource(id = R.color.teal_700)
+    val shareColor = colorResource(id = R.color.white)
     val context = LocalContext.current
     val sendIntent = Intent(Intent.ACTION_SEND).apply {
         putExtra(Intent.EXTRA_TEXT, text)
@@ -73,9 +94,19 @@ fun Share(text: String) {
     val shareIntent = Intent.createChooser(sendIntent, null)
     Button(
         onClick = { startActivity(context, shareIntent, null) },
-        colors = ButtonDefaults.buttonColors(containerColor = Color.Gray)
+        colors = ButtonDefaults.buttonColors(containerColor = buttonShare, contentColor = shareColor),
+        modifier = Modifier.width(200.dp).height(56.dp).padding(vertical = 8.dp),
+        shape = RoundedCornerShape(12.dp),
+        elevation = ButtonDefaults.buttonElevation(
+            defaultElevation = 4.dp,
+            pressedElevation = 8.dp
+        )
     ) {
         Icon(imageVector = Icons.Default.Share, contentDescription = "Share")
-        Text(text = "Share")
+        Text(
+            text = "Share",
+            fontSize = 18.sp,
+            fontWeight = FontWeight.SemiBold
+            )
     }
 }

@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
@@ -91,10 +92,13 @@ fun SettingsScreen(navController: NavController, settingsViewModel: SettingsView
                             settingsViewModel.expanded = false
                             settingsViewModel.cambiarDificultat(dificultatSeleccionada)
                             settingsViewModel.cambiarPregunta()
-                        })
-                    }
+                        }
+                    )
                 }
             }
+        }
+        Spacer(modifier = Modifier.height(20.dp))
+
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -129,6 +133,8 @@ fun SettingsScreen(navController: NavController, settingsViewModel: SettingsView
                     }
                 }
             }
+        Spacer(modifier = Modifier.height(20.dp))
+
         Column(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -157,8 +163,9 @@ fun SettingsScreen(navController: NavController, settingsViewModel: SettingsView
                 ),
                 modifier = Modifier.fillMaxWidth()
             )
-
         }
+        Spacer(modifier = Modifier.height(20.dp))
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,

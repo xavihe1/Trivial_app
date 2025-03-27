@@ -3,6 +3,7 @@ package com.example.trivial_app.view
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -72,7 +73,11 @@ fun GameScreen(navController: NavController, settingsViewModel: SettingsViewMode
     if (juegoTerminado || settingsViewModel.rondaActual > settingsViewModel.rondasTotales) {
         val victoria = settingsViewModel.rondaActual > settingsViewModel.rondasTotales
         LaunchedEffect(Unit) {
-            navController.navigate(Routes.Pantalla4.createRoute(victoria))
+            navController.navigate(Routes.Pantalla4.createRoute(victoria)) {
+                popUpTo(Routes.Pantalla3.route) {
+                    inclusive = true
+                }
+            }
             settingsViewModel.resetRonda()
             settingsViewModel.resetearPuntos()
         }
@@ -80,7 +85,7 @@ fun GameScreen(navController: NavController, settingsViewModel: SettingsViewMode
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(20.dp),
+                .padding(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
@@ -91,6 +96,7 @@ fun GameScreen(navController: NavController, settingsViewModel: SettingsViewMode
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
+            Spacer(modifier = Modifier.height(20.dp))
 
             Text(
                 text = settingsViewModel.preguntaActual.preguntes,
@@ -101,6 +107,7 @@ fun GameScreen(navController: NavController, settingsViewModel: SettingsViewMode
                 fontWeight = FontWeight.Medium,
                 textAlign = TextAlign.Center
             )
+            Spacer(modifier = Modifier.height(15.dp))
 
             Row(
                 modifier = Modifier
@@ -169,6 +176,7 @@ fun GameScreen(navController: NavController, settingsViewModel: SettingsViewMode
                     )
                 }
             }
+            Spacer(modifier = Modifier.height(10.dp))
 
             Row(
                 modifier = Modifier
@@ -237,6 +245,7 @@ fun GameScreen(navController: NavController, settingsViewModel: SettingsViewMode
                         )
                 }
             }
+            Spacer(modifier = Modifier.height(20.dp))
             Row(
                 modifier = Modifier
                     .padding(top = 70.dp)

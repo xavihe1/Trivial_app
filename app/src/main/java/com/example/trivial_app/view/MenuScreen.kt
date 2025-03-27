@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -68,6 +69,7 @@ fun MenuScreen(navController: NavController) {
                 .padding(70.dp)
                 .size(300.dp)
         )
+        Spacer(modifier = Modifier.height(26.dp))
 
         Button(
             onClick = {

@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -47,10 +48,11 @@ fun ResultScreen(navController: NavController, settingsViewModel: SettingsViewMo
     ) {
             Text(
                 text = "Your score is $puntos",
-                fontSize = 60.sp,
+                fontSize = 50.sp,
                 fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily.Cursive
+                fontFamily = FontFamily.SansSerif
             )
+        Spacer(modifier = Modifier.height(26.dp))
 
         Row(modifier = Modifier.padding(top = 50.dp)) {
             Share(text = "Share")
